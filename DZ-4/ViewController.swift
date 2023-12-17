@@ -12,24 +12,23 @@ var (validUser, validPass) = (false, false)
 
 
 class ViewController: UIViewController {
-    
-    enum alertState {
+
+    enum AlertState {
         case unCorrectUser
         case EmptyUser
         case unCorrectPass
         case EmptyPass
     }
-    
+
     @IBOutlet var userField: UITextField!
     @IBOutlet var passField: UITextField!
     @IBOutlet var logInButton: UIButton!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
-    
-    func showAlertDialog(at state: alertState) {
+
+    func showAlertDialog(at state: AlertState) {
         var alertController = UIAlertController()
         switch state {
         case .EmptyUser:
@@ -41,42 +40,39 @@ class ViewController: UIViewController {
         case .unCorrectPass:
             alertController = UIAlertController(title: "Внимание", message: "Пароль не верен", preferredStyle: .alert)
         }
-        
-        
+
         // Добавление действий (кнопок) к алерту
         let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
             // Обработка нажатия на кнопку OK
             print("Нажата кнопка OK")
         }
         alertController.addAction(okAction)
+
+        // Отображение алерта
+        present(alertController, animated: true, completion: nil)
     }
-    
+
     @IBAction func logInButtonAction(_ sender: Any) {
-        if let userName = userField.text {
+        if userField.text?.isEmpty ?? true {
+            showAlertDialog(at: .EmptyUser)
+        } else {
+            let userName = userField.text!
             if userName == correctUserName {
                 validUser = true
             } else {
                 showAlertDialog(at: .unCorrectUser)
-                print("unCorrectUser")
             }
-        } else {
-            showAlertDialog(at: .EmptyUser)
-            print("EmptyUser")
         }
-        
-        if let passw = passField.text {
+
+        if passField.text?.isEmpty ?? true {
+            showAlertDialog(at: .EmptyPass)
+        } else {
+            let passw = passField.text!
             if passw == correctPassword {
                 validPass = true
             } else {
                 showAlertDialog(at: .unCorrectPass)
-                print("unCorrectPass")
             }
-        } else {
-            showAlertDialog(at: .EmptyPass)
-            print("EmptyPass")
         }
     }
-    
-
 }
-
